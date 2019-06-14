@@ -1,5 +1,6 @@
 import express from "express";
 const natural = require("natural");
+import { parseMatch } from "./utils";
 
 const PORT = 1646;
 
@@ -17,8 +18,9 @@ app.get("/q/:question", (req, res) => {
     }
     const match = classifier.classify(req.params.question);
     if (match) {
+      const { doc, index } = parseMatch(match);
       console.log(`"${req.params.question}" matched to ${match}`);
-      res.send(require("./docs/wsc.json")[parseInt(match.slice(4)) - 1].answer);
+      res.send(require(`./docs/${doc}.json`)[index].answer);
     }
   });
 });
